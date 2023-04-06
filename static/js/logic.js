@@ -12,34 +12,36 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson'
 
+
 d3.json(url).then((response) => {
     let quakes = response.features;
 
     console.log(quakes);
-    
+    let colors = ['#FF5733','#FF8B33','#FFB733','#FFE033','#D1EE1F','#85FF15']
+
     for (let i = 0; i < quakes.length; i++) {
         let location = quakes[i].geometry;
         let mag = quakes[i].properties.mag;
         let rad = mag*10000;
         let color = '';
-        let date = new Date(quakes[i].properties.time * 1000);
+        let date = new Date(quakes[i].properties.time);
         if (location.coordinates[2] > 90) {
-            color = '#FF5733'
+            color = colors[0]
         }
         else if (location.coordinates[2] > 70) {
-            color = '#FF8B33'
+            color = colors[1]
         }
         else if (location.coordinates[2] > 50) {
-            color = '#FFB733'
+            color = colors[2]
         }
         else if (location.coordinates[2] > 30) {
-            color = '#FFE033'
+            color = colors[3]
         }
         else if (location.coordinates[2] > 10) {
-            color = '#D1EE1F'
+            color = colors[4]
         }
         else {
-            color = '#85FF15'
+            color = colors[5]
         }
         let marker = L.circle([location.coordinates[1], location.coordinates[0]], {
             color: color,
@@ -50,14 +52,26 @@ d3.json(url).then((response) => {
             <br />Depth: ${location.coordinates[2]}`);
         }
         
-        L.control.Legend({
-            position: "bottomright",
-            legends: [{
-                label: "Marker1",
-                type: "image",
-                url: "marker/marker-red.png",
-            }]
-        }).addTo(map);
+  // Set up the legend.
+  var legend = L.control({ position: "bottomleft" });
+
+  legend.onAdd = function(map) {
+    let div = L.DomUtil.create("div", "legend");
+    div.innerHTML += "<h4>Earthquake Depth (Past 7 Days)</h4>";
+
+    let labels = [">90","70-90",'50-70','30-50','10-30','<10'];
+    let colors = colors;
+
+    forEach(marker => {
+        
+    });
+    
+    
+  
+    return div;
+  };
+  
+  legend.addTo(map);
 
     }
     
