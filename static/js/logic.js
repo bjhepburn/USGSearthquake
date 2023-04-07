@@ -1,6 +1,6 @@
 let map = L.map("map", {
     center: [34.05,-118.24],
-    zoom: 6
+    zoom: 4
 });
 
 
@@ -11,13 +11,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 
 const url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson'
-
+let colors = ['#FF5733','#FF8B33','#FFB733','#FFE033','#D1EE1F','#85FF15']
 
 d3.json(url).then((response) => {
     let quakes = response.features;
 
-    console.log(quakes);
-    let colors = ['#FF5733','#FF8B33','#FFB733','#FFE033','#D1EE1F','#85FF15']
+    // console.log(quakes);
+    // let colors = ['#FF5733','#FF8B33','#FFB733','#FFE033','#D1EE1F','#85FF15']
 
     for (let i = 0; i < quakes.length; i++) {
         let location = quakes[i].geometry;
@@ -57,17 +57,12 @@ d3.json(url).then((response) => {
 
   legend.onAdd = function(map) {
     let div = L.DomUtil.create("div", "legend");
-    div.innerHTML += "<h4>Earthquake Depth (Past 7 Days)</h4>";
-
     let labels = [">90","70-90",'50-70','30-50','10-30','<10'];
-    let colors = colors;
+    div.innerHTML += "<h4>Quake Depth</h4>";
+    for (let i = 0; i < labels.length; i++) {
+        div.innerHTML += `<i style="background: ${colors[i]}"></i><span>${labels[i]}</span><br>`;
+  }
 
-    forEach(marker => {
-        
-    });
-    
-    
-  
     return div;
   };
   
